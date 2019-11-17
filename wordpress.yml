@@ -4,7 +4,7 @@
   remote_user: root
 
   tasks:
-   - name: yum install
+   - name: Yum install package
      yum:
       name: "{{ item }}"
       state: present
@@ -23,7 +23,7 @@
       - unzip
       - wget
       - MySQL-python
-   - name: Open Service
+   - name: Run Service
      service:
       name: "{{ item }}"
       state: started
@@ -35,24 +35,24 @@
       permanent: yes
       state: enabled 
       immediate: yes
-   - name: mysqladmin root
+   - name: execute mysqladmin root
      block:
       - shell: mysqladmin password "abc"
      rescue:
       - debug:
-         msg: 'May be dulpicate'
+         msg: 'May be dulpicate or we ever run this command'
    - name: copy file
      copy:
       remote_src: no
       src: /home/centos/wordpress-playbook/sql_script.sql
       dest: /tmp/sql_script.sql
-   - name: Add Database test 
+   - name: Add Database test for prevent SQL Not exist Exception 
      mysql_db:
       login_user: root
       login_password: abc
       name: test
       state: present   
-   - name: Duml Sqlllllll
+   - name: Duml Sqlllllll, Let it goooooooo
      block:
       - mysql_db:
          login_user: root
@@ -62,7 +62,7 @@
          target: /tmp/sql_script.sql
      rescue:
       - debug:
-         msg: 'Maybe dulpicate SQL command' 
+         msg: 'Maybe dulpicate SQL command or we ever run that sql command' 
    - name: Download wordpress
      get_url:
       url: https://wordpress.org/wordpress-5.0.tar.gz
@@ -88,7 +88,7 @@
       remote_src: yes
       src: /var/www/html/wordpress/wp-config-sample.php
       dest: /var/www/html/wordpress/wp-config.php
-   - name: Replatce config
+   - name: Replace config
      replace:
       path: /var/www/html/wordpress/wp-config.php
       regexp: "{{ item.name }}"
