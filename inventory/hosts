@@ -1,2 +1,2 @@
 [serverx]
-192.168.52.141 ansible_user=root ansible_password=redhat
+192.168.246.131 ansible_user=root ansible_password=redhat

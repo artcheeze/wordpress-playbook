@@ -35,10 +35,17 @@
       permanent: yes
       state: enabled 
       immediate: yes
+   - name: mysqladmin root
+     block:
+      - shell: mysqladmin password "abc"
+     rescue:
+      - debug:
+         msg: 'May be dulpicate'
    - name: copy file
      copy:
-      src: /home/centos/ansible/a.sql
-      dest: /tmp/a.sql
+      remote_src: no
+      src: /home/centos/wordpress-playbook/sql_script.sql
+      dest: /tmp/sql_script.sql
    - name: Add Database test 
      mysql_db:
       login_user: root
@@ -52,10 +59,10 @@
          login_password: abc
          state: import
          name: all
-         target: /tmp/a.sql
+         target: /tmp/sql_script.sql
      rescue:
       - debug:
-         msg: 'Some Bug in SQL' 
+         msg: 'Maybe dulpicate SQL command' 
    - name: Download wordpress
      get_url:
       url: https://wordpress.org/wordpress-5.0.tar.gz
@@ -87,7 +94,6 @@
       regexp: "{{ item.name }}"
       replace: "{{ item.replace }}"
      loop:
-      - { name: DB_NAME, replace: wordpress }
-      - { name: DB_USER, replace: ansible }
-      - { name: DB_PASSWORD, replace: mypassword }
-      - { name: DB_HOST, replace: localhost }
+      - { name: database_name_here, replace: wordpress }
+      - { name: username_here, replace: ansible }
+      - { name: password_here, replace: mypassword }
